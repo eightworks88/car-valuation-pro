@@ -22,6 +22,33 @@ const MODELES_PAR_MARQUE: Record<string, string[]> = {
   Volkswagen: ["Polo", "Golf", "T-Roc", "Tiguan", "T-Cross", "Passat", "ID.3", "ID.4", "Touran"],
   Toyota: ["Yaris", "Yaris Cross", "Corolla", "C-HR", "RAV4", "Camry", "Aygo X", "bZ4X"],
 };
+
+const FINITIONS_PAR_MODELE: Record<string, string[]> = {
+  "208": ["Like", "Active", "Allure", "GT", "GT Pack"],
+  "308": ["Active", "Allure", "Allure Pack", "GT", "GT Pack"],
+  "2008": ["Active", "Allure", "Allure Pack", "GT", "GT Pack"],
+  "3008": ["Active", "Allure", "Allure Pack", "GT", "GT Pack"],
+  "5008": ["Active", "Allure", "Allure Pack", "GT", "GT Pack"],
+  "Clio": ["Life", "Zen", "Intens", "RS Line", "Initiale Paris"],
+  "Mégane": ["Life", "Zen", "Intens", "RS Line"],
+  "Captur": ["Life", "Zen", "Intens", "RS Line", "Initiale Paris"],
+  "Arkana": ["Zen", "Intens", "RS Line"],
+  "C3": ["Live", "Feel", "Feel Pack", "Shine", "Shine Pack"],
+  "C4": ["Feel", "Feel Pack", "Shine", "Shine Pack"],
+  "A1": ["Design", "S line", "S Edition"],
+  "A3": ["Design", "Design Luxe", "S line", "S Edition"],
+  "A4": ["Design", "Design Luxe", "S line", "Avus"],
+  "Golf": ["Life", "Style", "R-Line", "GTI", "GTD"],
+  "Polo": ["Life", "Style", "R-Line"],
+  "T-Roc": ["Life", "Style", "R-Line"],
+  "Série 1": ["Lounge", "Business", "M Sport", "M135i"],
+  "Série 3": ["Lounge", "Business", "Luxury", "M Sport"],
+  "Classe A": ["Style", "AMG Line", "Progressive"],
+  "Classe C": ["Avantgarde", "AMG Line", "Business Line"],
+  "Yaris": ["France", "Design", "Collection"],
+  "Corolla": ["Dynamic", "Design", "Collection", "GR Sport"],
+};
+
 const MARQUES = Object.keys(MODELES_PAR_MARQUE);
 const CARBURANTS = ["Essence", "Diesel", "Hybride", "Électrique"];
 const BOITES = ["Manuelle", "Automatique"];
