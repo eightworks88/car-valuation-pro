@@ -54,7 +54,7 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
         {/* Marque */}
         <div className="space-y-1.5">
           <Label className="text-sm text-muted-foreground">Marque</Label>
-          <Select value={marque} onValueChange={setMarque}>
+          <Select value={marque} onValueChange={handleMarqueChange}>
             <SelectTrigger className="bg-secondary border-border focus:ring-primary focus:border-primary">
               <SelectValue placeholder="Sélectionner..." />
             </SelectTrigger>
@@ -69,12 +69,16 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
         {/* Modèle */}
         <div className="space-y-1.5">
           <Label className="text-sm text-muted-foreground">Modèle</Label>
-          <Input
-            placeholder="Ex: 208, Clio, A3..."
-            value={modele}
-            onChange={(e) => setModele(e.target.value)}
-            className="bg-secondary border-border focus:ring-primary focus:border-primary"
-          />
+          <Select value={modele} onValueChange={setModele} disabled={!marque}>
+            <SelectTrigger className="bg-secondary border-border focus:ring-primary focus:border-primary">
+              <SelectValue placeholder={marque ? "Sélectionner un modèle..." : "Choisir une marque d'abord"} />
+            </SelectTrigger>
+            <SelectContent className="bg-card border-border">
+              {(MODELES_PAR_MARQUE[marque] || []).map((m) => (
+                <SelectItem key={m} value={m}>{m}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Année */}
