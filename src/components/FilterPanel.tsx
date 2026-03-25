@@ -104,7 +104,7 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
         {/* Modèle */}
         <div className="space-y-1.5">
           <Label className="text-sm text-muted-foreground">Modèle</Label>
-          <Select value={modele} onValueChange={setModele} disabled={!marque}>
+          <Select value={modele} onValueChange={handleModeleChange} disabled={!marque}>
             <SelectTrigger className="bg-secondary border-border focus:ring-primary focus:border-primary">
               <SelectValue placeholder={marque ? "Sélectionner un modèle..." : "Choisir une marque d'abord"} />
             </SelectTrigger>
@@ -114,6 +114,35 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
               ))}
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Finition */}
+        <div className="space-y-1.5">
+          <Label className="text-sm text-muted-foreground">Finition</Label>
+          <Select value={finition} onValueChange={setFinition} disabled={!modele || !(FINITIONS_PAR_MODELE[modele])}>
+            <SelectTrigger className="bg-secondary border-border focus:ring-primary focus:border-primary">
+              <SelectValue placeholder={modele ? (FINITIONS_PAR_MODELE[modele] ? "Sélectionner une finition..." : "Finitions non disponibles") : "Choisir un modèle d'abord"} />
+            </SelectTrigger>
+            <SelectContent className="bg-card border-border">
+              {(FINITIONS_PAR_MODELE[modele] || []).map((f) => (
+                <SelectItem key={f} value={f}>{f}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Puissance */}
+        <div className="space-y-1.5">
+          <Label className="text-sm text-muted-foreground">Puissance (CV)</Label>
+          <Input
+            type="number"
+            min={50}
+            max={500}
+            placeholder="Ex: 130"
+            value={puissance}
+            onChange={(e) => setPuissance(e.target.value)}
+            className="bg-secondary border-border focus:ring-primary focus:border-primary"
+          />
         </div>
 
         {/* Année */}
