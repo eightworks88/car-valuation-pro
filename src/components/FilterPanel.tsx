@@ -13,14 +13,82 @@ import {
 } from "@/components/ui/select";
 
 const MODELES_PAR_MARQUE: Record<string, string[]> = {
-  Peugeot: ["108", "208", "308", "2008", "3008", "5008", "508", "Partner", "Rifter"],
-  Renault: ["Clio", "Mégane", "Captur", "Kadjar", "Arkana", "Austral", "Scenic", "Twingo", "Zoé"],
-  Citroën: ["C1", "C3", "C4", "C5 X", "Berlingo", "C3 Aircross", "C5 Aircross", "ë-C4"],
+  Peugeot: [
+    "108",
+    "208",
+    "308",
+    "2008",
+    "3008",
+    "5008",
+    "508",
+    "Partner",
+    "Rifter",
+  ],
+  Renault: [
+    "Clio",
+    "Mégane",
+    "Captur",
+    "Kadjar",
+    "Arkana",
+    "Austral",
+    "Scenic",
+    "Twingo",
+    "Zoé",
+  ],
+  Citroën: [
+    "C1",
+    "C3",
+    "C4",
+    "C5 X",
+    "Berlingo",
+    "C3 Aircross",
+    "C5 Aircross",
+    "ë-C4",
+  ],
   Audi: ["A1", "A3", "A4", "A5", "A6", "Q2", "Q3", "Q5", "Q7", "e-tron"],
-  BMW: ["Série 1", "Série 2", "Série 3", "Série 4", "Série 5", "X1", "X3", "X5", "iX"],
-  Mercedes: ["Classe A", "Classe B", "Classe C", "Classe E", "CLA", "GLA", "GLC", "GLE", "EQA"],
-  Volkswagen: ["Polo", "Golf", "T-Roc", "Tiguan", "T-Cross", "Passat", "ID.3", "ID.4", "Touran"],
-  Toyota: ["Yaris", "Yaris Cross", "Corolla", "C-HR", "RAV4", "Camry", "Aygo X", "bZ4X"],
+  BMW: [
+    "Série 1",
+    "Série 2",
+    "Série 3",
+    "Série 4",
+    "Série 5",
+    "X1",
+    "X3",
+    "X5",
+    "iX",
+  ],
+  Mercedes: [
+    "Classe A",
+    "Classe B",
+    "Classe C",
+    "Classe E",
+    "CLA",
+    "GLA",
+    "GLC",
+    "GLE",
+    "EQA",
+  ],
+  Volkswagen: [
+    "Polo",
+    "Golf",
+    "T-Roc",
+    "Tiguan",
+    "T-Cross",
+    "Passat",
+    "ID.3",
+    "ID.4",
+    "Touran",
+  ],
+  Toyota: [
+    "Yaris",
+    "Yaris Cross",
+    "Corolla",
+    "C-HR",
+    "RAV4",
+    "Camry",
+    "Aygo X",
+    "bZ4X",
+  ],
 };
 
 const FINITIONS_PAR_MODELE: Record<string, string[]> = {
@@ -29,24 +97,24 @@ const FINITIONS_PAR_MODELE: Record<string, string[]> = {
   "2008": ["Active", "Allure", "Allure Pack", "GT", "GT Pack"],
   "3008": ["Active", "Allure", "Allure Pack", "GT", "GT Pack"],
   "5008": ["Active", "Allure", "Allure Pack", "GT", "GT Pack"],
-  "Clio": ["Life", "Zen", "Intens", "RS Line", "Initiale Paris"],
-  "Mégane": ["Life", "Zen", "Intens", "RS Line"],
-  "Captur": ["Life", "Zen", "Intens", "RS Line", "Initiale Paris"],
-  "Arkana": ["Zen", "Intens", "RS Line"],
-  "C3": ["Live", "Feel", "Feel Pack", "Shine", "Shine Pack"],
-  "C4": ["Feel", "Feel Pack", "Shine", "Shine Pack"],
-  "A1": ["Design", "S line", "S Edition"],
-  "A3": ["Design", "Design Luxe", "S line", "S Edition"],
-  "A4": ["Design", "Design Luxe", "S line", "Avus"],
-  "Golf": ["Life", "Style", "R-Line", "GTI", "GTD"],
-  "Polo": ["Life", "Style", "R-Line"],
+  Clio: ["Life", "Zen", "Intens", "RS Line", "Initiale Paris"],
+  Mégane: ["Life", "Zen", "Intens", "RS Line"],
+  Captur: ["Life", "Zen", "Intens", "RS Line", "Initiale Paris"],
+  Arkana: ["Zen", "Intens", "RS Line"],
+  C3: ["Live", "Feel", "Feel Pack", "Shine", "Shine Pack"],
+  C4: ["Feel", "Feel Pack", "Shine", "Shine Pack"],
+  A1: ["Design", "S line", "S Edition"],
+  A3: ["Design", "Design Luxe", "S line", "S Edition"],
+  A4: ["Design", "Design Luxe", "S line", "Avus"],
+  Golf: ["Life", "Style", "R-Line", "GTI", "GTD"],
+  Polo: ["Life", "Style", "R-Line"],
   "T-Roc": ["Life", "Style", "R-Line"],
   "Série 1": ["Lounge", "Business", "M Sport", "M135i"],
   "Série 3": ["Lounge", "Business", "Luxury", "M Sport"],
   "Classe A": ["Style", "AMG Line", "Progressive"],
   "Classe C": ["Avantgarde", "AMG Line", "Business Line"],
-  "Yaris": ["France", "Design", "Collection"],
-  "Corolla": ["Dynamic", "Design", "Collection", "GR Sport"],
+  Yaris: ["France", "Design", "Collection"],
+  Corolla: ["Dynamic", "Design", "Collection", "GR Sport"],
 };
 
 const MARQUES = Object.keys(MODELES_PAR_MARQUE);
@@ -62,8 +130,8 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
   const [marque, setMarque] = useState("");
   const [modele, setModele] = useState("");
   const [finition, setFinition] = useState("");
-  const [annee, setAnnee] = useState("2022");
-  const [km, setKm] = useState([25000]);
+  const [annee, setAnnee] = useState("");
+  const [km, setKm] = useState([0]);
   const [puissance, setPuissance] = useState("");
   const [carburant, setCarburant] = useState("Essence");
   const [boite, setBoite] = useState("Manuelle");
@@ -95,7 +163,9 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
             </SelectTrigger>
             <SelectContent className="bg-card border-border">
               {MARQUES.map((m) => (
-                <SelectItem key={m} value={m}>{m}</SelectItem>
+                <SelectItem key={m} value={m}>
+                  {m}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -104,13 +174,25 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
         {/* Modèle */}
         <div className="space-y-1.5">
           <Label className="text-sm text-muted-foreground">Modèle</Label>
-          <Select value={modele} onValueChange={handleModeleChange} disabled={!marque}>
+          <Select
+            value={modele}
+            onValueChange={handleModeleChange}
+            disabled={!marque}
+          >
             <SelectTrigger className="bg-secondary border-border focus:ring-primary focus:border-primary">
-              <SelectValue placeholder={marque ? "Sélectionner un modèle..." : "Choisir une marque d'abord"} />
+              <SelectValue
+                placeholder={
+                  marque
+                    ? "Sélectionner un modèle..."
+                    : "Choisir une marque d'abord"
+                }
+              />
             </SelectTrigger>
             <SelectContent className="bg-card border-border">
               {(MODELES_PAR_MARQUE[marque] || []).map((m) => (
-                <SelectItem key={m} value={m}>{m}</SelectItem>
+                <SelectItem key={m} value={m}>
+                  {m}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -119,13 +201,27 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
         {/* Finition */}
         <div className="space-y-1.5">
           <Label className="text-sm text-muted-foreground">Finition</Label>
-          <Select value={finition} onValueChange={setFinition} disabled={!modele || !(FINITIONS_PAR_MODELE[modele])}>
+          <Select
+            value={finition}
+            onValueChange={setFinition}
+            disabled={!modele || !FINITIONS_PAR_MODELE[modele]}
+          >
             <SelectTrigger className="bg-secondary border-border focus:ring-primary focus:border-primary">
-              <SelectValue placeholder={modele ? (FINITIONS_PAR_MODELE[modele] ? "Sélectionner une finition..." : "Finitions non disponibles") : "Choisir un modèle d'abord"} />
+              <SelectValue
+                placeholder={
+                  modele
+                    ? FINITIONS_PAR_MODELE[modele]
+                      ? "Sélectionner une finition..."
+                      : "Finitions non disponibles"
+                    : "Choisir un modèle d'abord"
+                }
+              />
             </SelectTrigger>
             <SelectContent className="bg-card border-border">
               {(FINITIONS_PAR_MODELE[modele] || []).map((f) => (
-                <SelectItem key={f} value={f}>{f}</SelectItem>
+                <SelectItem key={f} value={f}>
+                  {f}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -133,7 +229,9 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
 
         {/* Puissance */}
         <div className="space-y-1.5">
-          <Label className="text-sm text-muted-foreground">Puissance (CV)</Label>
+          <Label className="text-sm text-muted-foreground">
+            Puissance (CV)
+          </Label>
           <Input
             type="number"
             min={50}
@@ -150,9 +248,10 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
           <Label className="text-sm text-muted-foreground">Année</Label>
           <Input
             type="number"
-            min={2010}
+            min={1990}
             max={2026}
             value={annee}
+            placeholder="Ex: 2022"
             onChange={(e) => setAnnee(e.target.value)}
             className="bg-secondary border-border focus:ring-primary focus:border-primary"
           />
@@ -170,13 +269,13 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
             value={km}
             onValueChange={setKm}
             min={0}
-            max={50000}
+            max={500000}
             step={1000}
             className="w-full"
           />
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>0 km</span>
-            <span>50 000 km</span>
+            <span>500 000 km</span>
           </div>
         </div>
 
@@ -202,7 +301,9 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
 
         {/* Boîte de vitesse */}
         <div className="space-y-1.5">
-          <Label className="text-sm text-muted-foreground">Boîte de vitesse</Label>
+          <Label className="text-sm text-muted-foreground">
+            Boîte de vitesse
+          </Label>
           <div className="grid grid-cols-2 gap-1.5">
             {BOITES.map((b) => (
               <button
