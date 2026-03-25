@@ -3,6 +3,7 @@ import { Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
@@ -11,7 +12,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const MARQUES = ["Peugeot", "Renault", "Citroën", "Audi", "BMW", "Mercedes", "Volkswagen", "Toyota"];
+const MODELES_PAR_MARQUE: Record<string, string[]> = {
+  Peugeot: ["108", "208", "308", "2008", "3008", "5008", "508", "Partner", "Rifter"],
+  Renault: ["Clio", "Mégane", "Captur", "Kadjar", "Arkana", "Austral", "Scenic", "Twingo", "Zoé"],
+  Citroën: ["C1", "C3", "C4", "C5 X", "Berlingo", "C3 Aircross", "C5 Aircross", "ë-C4"],
+  Audi: ["A1", "A3", "A4", "A5", "A6", "Q2", "Q3", "Q5", "Q7", "e-tron"],
+  BMW: ["Série 1", "Série 2", "Série 3", "Série 4", "Série 5", "X1", "X3", "X5", "iX"],
+  Mercedes: ["Classe A", "Classe B", "Classe C", "Classe E", "CLA", "GLA", "GLC", "GLE", "EQA"],
+  Volkswagen: ["Polo", "Golf", "T-Roc", "Tiguan", "T-Cross", "Passat", "ID.3", "ID.4", "Touran"],
+  Toyota: ["Yaris", "Yaris Cross", "Corolla", "C-HR", "RAV4", "Camry", "Aygo X", "bZ4X"],
+};
+const MARQUES = Object.keys(MODELES_PAR_MARQUE);
 const CARBURANTS = ["Essence", "Diesel", "Hybride", "Électrique"];
 const BOITES = ["Manuelle", "Automatique"];
 
@@ -24,9 +35,14 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
   const [marque, setMarque] = useState("");
   const [modele, setModele] = useState("");
   const [annee, setAnnee] = useState("2022");
-  const [km, setKm] = useState("");
+  const [km, setKm] = useState([25000]);
   const [carburant, setCarburant] = useState("Essence");
   const [boite, setBoite] = useState("Manuelle");
+
+  const handleMarqueChange = (value: string) => {
+    setMarque(value);
+    setModele("");
+  };
 
   return (
     <div className="bg-card border border-border rounded-lg p-5 space-y-5">
@@ -38,7 +54,7 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
         {/* Marque */}
         <div className="space-y-1.5">
           <Label className="text-sm text-muted-foreground">Marque</Label>
-          <Select value={marque} onValueChange={setMarque}>
+          <Select value={marque} onValueChange={handleMarqueChange}>
             <SelectTrigger className="bg-secondary border-border focus:ring-primary focus:border-primary">
               <SelectValue placeholder="Sélectionner..." />
             </SelectTrigger>
@@ -53,12 +69,16 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
         {/* Modèle */}
         <div className="space-y-1.5">
           <Label className="text-sm text-muted-foreground">Modèle</Label>
-          <Input
-            placeholder="Ex: 208, Clio, A3..."
-            value={modele}
-            onChange={(e) => setModele(e.target.value)}
-            className="bg-secondary border-border focus:ring-primary focus:border-primary"
-          />
+          <Select value={modele} onValueChange={setModele} disabled={!marque}>
+            <SelectTrigger className="bg-secondary border-border focus:ring-primary focus:border-primary">
+              <SelectValue placeholder={marque ? "Sélectionner un modèle..." : "Choisir une marque d'abord"} />
+            </SelectTrigger>
+            <SelectContent className="bg-card border-border">
+              {(MODELES_PAR_MARQUE[marque] || []).map((m) => (
+                <SelectItem key={m} value={m}>{m}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Année */}
@@ -75,19 +95,25 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
         </div>
 
         {/* Kilométrage */}
-        <div className="space-y-1.5">
-          <Label className="text-sm text-muted-foreground">Kilométrage</Label>
-          <Input
-            placeholder="Ex: 60000"
-            value={km}
-            onChange={(e) => setKm(e.target.value.replace(/\D/g, ""))}
-            className="bg-secondary border-border focus:ring-primary focus:border-primary"
-          />
-          {km && (
-            <span className="text-xs text-muted-foreground">
-              {Number(km).toLocaleString("fr-FR")} km
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between">
+            <Label className="text-sm text-muted-foreground">Kilométrage</Label>
+            <span className="text-sm font-medium text-primary">
+              {km[0].toLocaleString("fr-FR")} km
             </span>
-          )}
+          </div>
+          <Slider
+            value={km}
+            onValueChange={setKm}
+            min={0}
+            max={50000}
+            step={1000}
+            className="w-full"
+          />
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>0 km</span>
+            <span>50 000 km</span>
+          </div>
         </div>
 
         {/* Carburant */}
