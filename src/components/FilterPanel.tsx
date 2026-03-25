@@ -61,14 +61,22 @@ interface FilterPanelProps {
 const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
   const [marque, setMarque] = useState("");
   const [modele, setModele] = useState("");
+  const [finition, setFinition] = useState("");
   const [annee, setAnnee] = useState("2022");
   const [km, setKm] = useState([25000]);
+  const [puissance, setPuissance] = useState("");
   const [carburant, setCarburant] = useState("Essence");
   const [boite, setBoite] = useState("Manuelle");
 
   const handleMarqueChange = (value: string) => {
     setMarque(value);
     setModele("");
+    setFinition("");
+  };
+
+  const handleModeleChange = (value: string) => {
+    setModele(value);
+    setFinition("");
   };
 
   return (
