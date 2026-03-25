@@ -22,6 +22,33 @@ const MODELES_PAR_MARQUE: Record<string, string[]> = {
   Volkswagen: ["Polo", "Golf", "T-Roc", "Tiguan", "T-Cross", "Passat", "ID.3", "ID.4", "Touran"],
   Toyota: ["Yaris", "Yaris Cross", "Corolla", "C-HR", "RAV4", "Camry", "Aygo X", "bZ4X"],
 };
+
+const FINITIONS_PAR_MODELE: Record<string, string[]> = {
+  "208": ["Like", "Active", "Allure", "GT", "GT Pack"],
+  "308": ["Active", "Allure", "Allure Pack", "GT", "GT Pack"],
+  "2008": ["Active", "Allure", "Allure Pack", "GT", "GT Pack"],
+  "3008": ["Active", "Allure", "Allure Pack", "GT", "GT Pack"],
+  "5008": ["Active", "Allure", "Allure Pack", "GT", "GT Pack"],
+  "Clio": ["Life", "Zen", "Intens", "RS Line", "Initiale Paris"],
+  "Mégane": ["Life", "Zen", "Intens", "RS Line"],
+  "Captur": ["Life", "Zen", "Intens", "RS Line", "Initiale Paris"],
+  "Arkana": ["Zen", "Intens", "RS Line"],
+  "C3": ["Live", "Feel", "Feel Pack", "Shine", "Shine Pack"],
+  "C4": ["Feel", "Feel Pack", "Shine", "Shine Pack"],
+  "A1": ["Design", "S line", "S Edition"],
+  "A3": ["Design", "Design Luxe", "S line", "S Edition"],
+  "A4": ["Design", "Design Luxe", "S line", "Avus"],
+  "Golf": ["Life", "Style", "R-Line", "GTI", "GTD"],
+  "Polo": ["Life", "Style", "R-Line"],
+  "T-Roc": ["Life", "Style", "R-Line"],
+  "Série 1": ["Lounge", "Business", "M Sport", "M135i"],
+  "Série 3": ["Lounge", "Business", "Luxury", "M Sport"],
+  "Classe A": ["Style", "AMG Line", "Progressive"],
+  "Classe C": ["Avantgarde", "AMG Line", "Business Line"],
+  "Yaris": ["France", "Design", "Collection"],
+  "Corolla": ["Dynamic", "Design", "Collection", "GR Sport"],
+};
+
 const MARQUES = Object.keys(MODELES_PAR_MARQUE);
 const CARBURANTS = ["Essence", "Diesel", "Hybride", "Électrique"];
 const BOITES = ["Manuelle", "Automatique"];
@@ -34,14 +61,22 @@ interface FilterPanelProps {
 const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
   const [marque, setMarque] = useState("");
   const [modele, setModele] = useState("");
+  const [finition, setFinition] = useState("");
   const [annee, setAnnee] = useState("2022");
   const [km, setKm] = useState([25000]);
+  const [puissance, setPuissance] = useState("");
   const [carburant, setCarburant] = useState("Essence");
   const [boite, setBoite] = useState("Manuelle");
 
   const handleMarqueChange = (value: string) => {
     setMarque(value);
     setModele("");
+    setFinition("");
+  };
+
+  const handleModeleChange = (value: string) => {
+    setModele(value);
+    setFinition("");
   };
 
   return (
@@ -69,7 +104,7 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
         {/* Modèle */}
         <div className="space-y-1.5">
           <Label className="text-sm text-muted-foreground">Modèle</Label>
-          <Select value={modele} onValueChange={setModele} disabled={!marque}>
+          <Select value={modele} onValueChange={handleModeleChange} disabled={!marque}>
             <SelectTrigger className="bg-secondary border-border focus:ring-primary focus:border-primary">
               <SelectValue placeholder={marque ? "Sélectionner un modèle..." : "Choisir une marque d'abord"} />
             </SelectTrigger>
@@ -79,6 +114,35 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
               ))}
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Finition */}
+        <div className="space-y-1.5">
+          <Label className="text-sm text-muted-foreground">Finition</Label>
+          <Select value={finition} onValueChange={setFinition} disabled={!modele || !(FINITIONS_PAR_MODELE[modele])}>
+            <SelectTrigger className="bg-secondary border-border focus:ring-primary focus:border-primary">
+              <SelectValue placeholder={modele ? (FINITIONS_PAR_MODELE[modele] ? "Sélectionner une finition..." : "Finitions non disponibles") : "Choisir un modèle d'abord"} />
+            </SelectTrigger>
+            <SelectContent className="bg-card border-border">
+              {(FINITIONS_PAR_MODELE[modele] || []).map((f) => (
+                <SelectItem key={f} value={f}>{f}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Puissance */}
+        <div className="space-y-1.5">
+          <Label className="text-sm text-muted-foreground">Puissance (CV)</Label>
+          <Input
+            type="number"
+            min={50}
+            max={500}
+            placeholder="Ex: 130"
+            value={puissance}
+            onChange={(e) => setPuissance(e.target.value)}
+            className="bg-secondary border-border focus:ring-primary focus:border-primary"
+          />
         </div>
 
         {/* Année */}
