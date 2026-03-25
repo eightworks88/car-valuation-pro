@@ -95,19 +95,25 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
         </div>
 
         {/* Kilométrage */}
-        <div className="space-y-1.5">
-          <Label className="text-sm text-muted-foreground">Kilométrage</Label>
-          <Input
-            placeholder="Ex: 60000"
-            value={km}
-            onChange={(e) => setKm(e.target.value.replace(/\D/g, ""))}
-            className="bg-secondary border-border focus:ring-primary focus:border-primary"
-          />
-          {km && (
-            <span className="text-xs text-muted-foreground">
-              {Number(km).toLocaleString("fr-FR")} km
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between">
+            <Label className="text-sm text-muted-foreground">Kilométrage</Label>
+            <span className="text-sm font-medium text-primary">
+              {km[0].toLocaleString("fr-FR")} km
             </span>
-          )}
+          </div>
+          <Slider
+            value={km}
+            onValueChange={setKm}
+            min={0}
+            max={50000}
+            step={1000}
+            className="w-full"
+          />
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>0 km</span>
+            <span>50 000 km</span>
+          </div>
         </div>
 
         {/* Carburant */}
