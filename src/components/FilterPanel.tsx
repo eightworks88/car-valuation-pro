@@ -11,6 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCarStore } from "@/store/useCarStore";
+import { useToast } from "@/components/ui/use-toast";
+import { filterSchema, SearchFilters } from "@/lib/validations";
 
 const MODELES_PAR_MARQUE: Record<string, string[]> = {
   Peugeot: [
@@ -118,23 +121,21 @@ const FINITIONS_PAR_MODELE: Record<string, string[]> = {
 };
 
 const MARQUES = Object.keys(MODELES_PAR_MARQUE);
-const CARBURANTS = ["Essence", "Diesel", "Hybride", "Électrique"];
+const CARBURANTS = ["Essence", "Diesel", "Hybride", "Electrique"];
 const BOITES = ["Manuelle", "Automatique"];
 
-interface FilterPanelProps {
-  onAnalyze: () => void;
-  isLoading: boolean;
-}
+const FilterPanel = () => {
+  const { isAnalyzing, setIsAnalyzing, setResults, setFilters } = useCarStore();
+  const { toast } = useToast();
 
-const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
-  const [marque, setMarque] = useState("");
-  const [modele, setModele] = useState("");
+  const [marque, setMarque] = useState("Renault");
+  const [modele, setModele] = useState("Clio");
   const [finition, setFinition] = useState("");
-  const [annee, setAnnee] = useState("");
-  const [km, setKm] = useState([0]);
-  const [puissance, setPuissance] = useState("");
-  const [carburant, setCarburant] = useState("Essence");
-  const [boite, setBoite] = useState("Manuelle");
+  const [annee, setAnnee] = useState("2022");
+  const [km, setKm] = useState([30000]);
+  const [puissance, setPuissance] = useState("110");
+  const [carburant, setCarburant] = useState<SearchFilters['carburant']>("Essence");
+  const [boite, setBoite] = useState<SearchFilters['boite']>("Manuelle");
 
   const handleMarqueChange = (value: string) => {
     setMarque(value);
@@ -145,6 +146,61 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
   const handleModeleChange = (value: string) => {
     setModele(value);
     setFinition("");
+  };
+
+  const handleSubmit = async () => {
+    const formData = {
+      marque,
+      modele,
+      annee: parseInt(annee, 10),
+      kilometrage: km[0],
+      carburant,
+      boite,
+    };
+
+    const validationResult = filterSchema.safeParse(formData);
+
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0].message;
+      toast({
+        variant: "destructive",
+        title: "Erreur de validation",
+        description: firstError,
+      });
+      return;
+    }
+
+    setIsAnalyzing(true);
+    try {
+      const response = await fetch('/api/scraper', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(validationResult.data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Une erreur est survenue lors de l'analyse.");
+      }
+
+      setResults(result);
+      setFilters(validationResult.data);
+      toast({
+          title: "Analyse terminée !",
+          description: `${result.nb_annonces} annonces correspondantes trouvées.`,
+      });
+
+    } catch (error) {
+      console.error("API Error:", error);
+      toast({
+        variant: "destructive",
+        title: "Erreur d'analyse",
+        description: error instanceof Error ? error.message : "Une erreur inconnue est survenue.",
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   return (
@@ -249,7 +305,7 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
           <Input
             type="number"
             min={1990}
-            max={2026}
+            max={new Date().getFullYear() + 1}
             value={annee}
             placeholder="Ex: 2022"
             onChange={(e) => setAnnee(e.target.value)}
@@ -282,14 +338,14 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
         {/* Carburant */}
         <div className="space-y-1.5">
           <Label className="text-sm text-muted-foreground">Carburant</Label>
-          <div className="grid grid-cols-2 gap-1.5">
+          <div className="grid grid-cols-2 gap-2">
             {CARBURANTS.map((c) => (
               <button
                 key={c}
-                onClick={() => setCarburant(c)}
+                onClick={() => setCarburant(c as SearchFilters['carburant'])}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
                   carburant === c
-                    ? "bg-primary text-primary-foreground neon-glow"
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
                     : "bg-secondary text-secondary-foreground hover:bg-muted"
                 }`}
               >
@@ -304,14 +360,14 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
           <Label className="text-sm text-muted-foreground">
             Boîte de vitesse
           </Label>
-          <div className="grid grid-cols-2 gap-1.5">
+          <div className="grid grid-cols-2 gap-2">
             {BOITES.map((b) => (
               <button
                 key={b}
-                onClick={() => setBoite(b)}
+                onClick={() => setBoite(b as SearchFilters['boite'])}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
                   boite === b
-                    ? "bg-primary text-primary-foreground neon-glow"
+                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
                     : "bg-secondary text-secondary-foreground hover:bg-muted"
                 }`}
               >
@@ -323,16 +379,16 @@ const FilterPanel = ({ onAnalyze, isLoading }: FilterPanelProps) => {
 
         {/* CTA */}
         <Button
-          onClick={onAnalyze}
-          disabled={isLoading}
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 neon-glow font-semibold py-6 text-base animate-pulse-neon"
+          onClick={handleSubmit}
+          disabled={isAnalyzing}
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold py-6 text-base"
         >
-          {isLoading ? (
+          {isAnalyzing ? (
             <Loader2 className="w-5 h-5 animate-spin mr-2" />
           ) : (
             <Search className="w-5 h-5 mr-2" />
           )}
-          {isLoading ? "Analyse en cours..." : "Calculer la Valeur Marché"}
+          {isAnalyzing ? "Analyse en cours..." : "Calculer la Valeur Marché"}
         </Button>
       </div>
     </div>
